@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">DataTask</string>
+    <string name="hint_user_name">Enter username</string>
+    <string name="hint_user_pswd">Enter password</string>
+
+    <string name="btn_login">Login</string>
+    <string name="btn_register">Register</string>
+    <string name="btn_logout">Log out</string>
+    <string name="cancel">Cancel</string>
+    <string name="select_island">Select island</string>
+    <string name="user_welcome">Welcome, %1$s.</string>
+    <string name="island_id">Your island id is %1$d.</string>
+    <string name="no_island">You have no island</string>
+</resources>
