@@ -5,6 +5,9 @@ package com.example.webprog26.datatask.interfaces;
  */
 
 public interface InterruptChecker {
-
+    /**
+     * Checks is Thread interrupted
+     * @return boolean
+     */
     boolean isThreadInterrupted();
 }

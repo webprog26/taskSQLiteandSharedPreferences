@@ -28,12 +28,21 @@ public class DBProvider {
         this.mDbHelper = new DBHelper(activity);
     }
 
+    /**
+     * Inserts given {@link Island} to database
+     * @param island {@link Island}
+     * @return long
+     */
     public long insertIslandToDb(Island island){
         ContentValues contentValues = new ContentValues();
         contentValues.put(DBHelper.COOK_ISLAND_NAME, island.getIslandName());
         return mDbHelper.getWritableDatabase().insert(DBHelper.TABLE_COOK_ISLANDS, null, contentValues);
     }
 
+    /**
+     * Returns all the islands, previously added to database
+     * @return ArrayList<Island>
+     */
     public ArrayList<Island> getCookIslandsFromDB(){
         ArrayList<Island> islands = new ArrayList<>();
 
@@ -49,6 +58,10 @@ public class DBProvider {
         return islands;
     }
 
+    /**
+     * Returns all the registered users
+     * @return {@link ArrayList<{User}>}
+     */
     public ArrayList<User> getUsersFromDB(){
         ArrayList<User> users = new ArrayList<>();
 
@@ -66,6 +79,11 @@ public class DBProvider {
         return users;
     }
 
+    /**
+     * Returns single {@link User} found in database by given id
+     * @param userId long
+     * @return {@link User}
+     */
     public User getUserById(long userId){
         User user = new User();
 
@@ -82,6 +100,11 @@ public class DBProvider {
         return user;
     }
 
+    /**
+     * Returns single {@link User} found in database by given username
+     * @param userName {@link String}
+     * @return {@link User}
+     */
     public User getUserByName(String userName){
         User user = new User();
 
@@ -98,8 +121,12 @@ public class DBProvider {
         return user;
     }
 
+    /**
+     * Inserts to data base user with chosen {@link Island}
+     * @param user {@link User}
+     * @return long
+     */
     public long registerUserWithIsland(User user){
-        Log.i(TAG, "writing registering user with island to DB " + Thread.currentThread().getName());
         ContentValues contentValues = new ContentValues();
         contentValues.put(DBHelper.USER_NAME, user.getUserName());
         contentValues.put(DBHelper.USER_PSWD, user.getUserPswd());
@@ -108,6 +135,10 @@ public class DBProvider {
         return mDbHelper.getWritableDatabase().insert(DBHelper.TABLE_USERS, null, contentValues);
     }
 
+    /**
+     * Checks is database already filled with islands, so it doesn't need to lopad them anymore
+     * @return boolean
+     */
     public boolean isTableIslandsAlreadyFilled(){
         return getCookIslandsFromDB().size() >= COOK_ISLANDS_NUMBER;
     }

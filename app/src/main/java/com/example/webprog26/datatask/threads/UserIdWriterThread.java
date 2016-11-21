@@ -1,7 +1,7 @@
 package com.example.webprog26.datatask.threads;
 
 import com.example.webprog26.datatask.interfaces.InterruptChecker;
-import com.example.webprog26.datatask.utils.SharedPreferencesUtils;
+import com.example.webprog26.datatask.managers.SharedPreferencesManager;
 
 /**
  * Created by webprog26 on 16.11.2016.
@@ -12,11 +12,11 @@ public class UserIdWriterThread extends Thread implements InterruptChecker{
     private static final String TAG = "UserIdWriterThread";
 
     private long mUserId;
-    private SharedPreferencesUtils mSharedPreferencesUtils;
+    private SharedPreferencesManager mSharedPreferencesManager;
 
-    public UserIdWriterThread(long mUserId, SharedPreferencesUtils mSharedPreferencesUtils) {
+    public UserIdWriterThread(long mUserId, SharedPreferencesManager mSharedPreferencesManager) {
         this.mUserId = mUserId;
-        this.mSharedPreferencesUtils = mSharedPreferencesUtils;
+        this.mSharedPreferencesManager = mSharedPreferencesManager;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class UserIdWriterThread extends Thread implements InterruptChecker{
     }
 
     private synchronized void writeUserIdToSharedPreferences(long userId){
-        mSharedPreferencesUtils.writeUserId(userId);
+        mSharedPreferencesManager.writeUserId(userId);
     }
 
     @Override

@@ -1,5 +1,8 @@
-package com.example.webprog26.datatask.utils;
+package com.example.webprog26.datatask.managers;
 
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
 
@@ -8,6 +11,8 @@ import android.widget.Spinner;
  */
 
 public class CheckedChangeHandler implements CompoundButton.OnCheckedChangeListener {
+
+    private static final String TAG = "CheckedChangeHandler";
 
     private Spinner mSpinner;
 

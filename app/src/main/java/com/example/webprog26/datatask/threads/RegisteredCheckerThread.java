@@ -2,7 +2,7 @@ package com.example.webprog26.datatask.threads;
 
 import android.util.Log;
 
-import com.example.webprog26.datatask.utils.LoginChecker;
+import com.example.webprog26.datatask.managers.LoginChecker;
 import com.example.webprog26.datatask.interfaces.InterruptChecker;
 import com.example.webprog26.datatask.interfaces.IsUserRegisteredListener;
 import com.example.webprog26.datatask.models.User;

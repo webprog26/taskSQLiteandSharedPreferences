@@ -2,7 +2,7 @@ package com.example.webprog26.datatask.threads;
 
 import android.util.Log;
 
-import com.example.webprog26.datatask.utils.SharedPreferencesUtils;
+import com.example.webprog26.datatask.managers.SharedPreferencesManager;
 import com.example.webprog26.datatask.interfaces.InterruptChecker;
 
 /**
@@ -13,11 +13,11 @@ public class LogInWriterThread extends Thread implements InterruptChecker {
 
     private static final String TAG = "LogInWriterThread";
 
-    private SharedPreferencesUtils mSharedPreferencesUtils;
+    private SharedPreferencesManager mSharedPreferencesManager;
     private boolean mIsLoggedIn;
 
-    public LogInWriterThread(SharedPreferencesUtils mSharedPreferencesUtils, boolean isLoggedIn) {
-        this.mSharedPreferencesUtils = mSharedPreferencesUtils;
+    public LogInWriterThread(SharedPreferencesManager mSharedPreferencesManager, boolean isLoggedIn) {
+        this.mSharedPreferencesManager = mSharedPreferencesManager;
         this.mIsLoggedIn = isLoggedIn;
     }
 
@@ -32,7 +32,7 @@ public class LogInWriterThread extends Thread implements InterruptChecker {
 
     private synchronized void writeUserLoginState(boolean isLoggedIn){
         Log.i(TAG, "Writing login state to " + String.valueOf(isLoggedIn));
-        mSharedPreferencesUtils.writeLoginState(isLoggedIn);
+        mSharedPreferencesManager.writeLoginState(isLoggedIn);
     }
 
     @Override

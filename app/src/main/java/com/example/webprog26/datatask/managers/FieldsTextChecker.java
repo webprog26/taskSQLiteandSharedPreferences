@@ -1,4 +1,4 @@
-package com.example.webprog26.datatask.utils;
+package com.example.webprog26.datatask.managers;
 
 import android.widget.EditText;
 

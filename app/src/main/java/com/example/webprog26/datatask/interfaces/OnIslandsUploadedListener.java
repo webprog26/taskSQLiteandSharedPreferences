@@ -5,5 +5,8 @@ package com.example.webprog26.datatask.interfaces;
  */
 
 public interface OnIslandsUploadedListener {
+    /**
+     *Processes with uploading {@link java.util.List<com.example.webprog26.datatask.models.Island>} to database
+     */
     void onIslandsUploaded();
 }

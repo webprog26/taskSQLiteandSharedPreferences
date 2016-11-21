@@ -1,6 +1,6 @@
 package com.example.webprog26.datatask.threads;
 
-import com.example.webprog26.datatask.utils.SharedPreferencesUtils;
+import com.example.webprog26.datatask.managers.SharedPreferencesManager;
 import com.example.webprog26.datatask.interfaces.InterruptChecker;
 import com.example.webprog26.datatask.interfaces.IsUserLoggedInListener;
 
@@ -10,11 +10,11 @@ import com.example.webprog26.datatask.interfaces.IsUserLoggedInListener;
 
 public class LogInReaderThread extends Thread implements InterruptChecker {
 
-    private SharedPreferencesUtils mSharedPreferencesUtils;
+    private SharedPreferencesManager mSharedPreferencesManager;
     private IsUserLoggedInListener mIsUserLoggedIn;
 
-    public LogInReaderThread(SharedPreferencesUtils mSharedPreferencesUtils, IsUserLoggedInListener mIsUserLoggedIn) {
-        this.mSharedPreferencesUtils = mSharedPreferencesUtils;
+    public LogInReaderThread(SharedPreferencesManager mSharedPreferencesManager, IsUserLoggedInListener mIsUserLoggedIn) {
+        this.mSharedPreferencesManager = mSharedPreferencesManager;
         this.mIsUserLoggedIn = mIsUserLoggedIn;
     }
 
@@ -29,7 +29,7 @@ public class LogInReaderThread extends Thread implements InterruptChecker {
     }
 
     private synchronized void setIsUserLoggedIn(){
-        mIsUserLoggedIn.setIsLoggedIn(mSharedPreferencesUtils.readUserLoginState());
+        mIsUserLoggedIn.isUserLoggedIn(mSharedPreferencesManager.readUserLoginState());
     }
 
     @Override

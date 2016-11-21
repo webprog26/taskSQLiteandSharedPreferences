@@ -7,7 +7,7 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.example.webprog26.datatask.interfaces.InterruptChecker;
-import com.example.webprog26.datatask.interfaces.Reader;
+import com.example.webprog26.datatask.interfaces.OnIslandsFromAssetsReadListener;
 import com.example.webprog26.datatask.models.Island;
 
 import java.io.BufferedReader;
@@ -24,12 +24,12 @@ public class AssetsReaderThread extends Thread implements InterruptChecker {
 
     private static final String TAG = "AssetsReaderThread";
 
-    private Reader mReader;
+    private OnIslandsFromAssetsReadListener mOnIslandsFromAssetsReadListener;
     private String mFilename;
     private AssetManager mAssetManager;
 
-    public AssetsReaderThread(Reader reader, String filename, Activity activity) {
-        this.mReader = reader;
+    public AssetsReaderThread(OnIslandsFromAssetsReadListener onIslandsFromAssetsReadListener, String filename, Activity activity) {
+        this.mOnIslandsFromAssetsReadListener = onIslandsFromAssetsReadListener;
         this.mFilename = filename;
         this.mAssetManager = activity.getAssets();
     }
@@ -38,13 +38,12 @@ public class AssetsReaderThread extends Thread implements InterruptChecker {
     public void run() {
         super.run();
         Log.i(TAG, "AssetsReaderThread run()");
-//        final String cookIslandsString = getTxtFile(mFilename);
         final ArrayList<Island> islands = getTxtFile(mFilename);
         Log.i(TAG, islands.toString());
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                mReader.onRead(islands);
+                mOnIslandsFromAssetsReadListener.onIslandsFromAssetsReadFinished(islands);
             }
         });
 
@@ -53,6 +52,11 @@ public class AssetsReaderThread extends Thread implements InterruptChecker {
         }
     }
 
+    /**
+     * Reads islands from .txt file located in the assets
+     * @param fileName {@link String}
+     * @return {@link ArrayList<{Island>}
+     */
     private synchronized ArrayList<Island> getTxtFile(String fileName)
     {
         BufferedReader reader = null;
@@ -67,8 +71,6 @@ public class AssetsReaderThread extends Thread implements InterruptChecker {
 
             while((line = reader.readLine()) != null)
             {
-//                builder.append(line);
-//                builder.append("\n");
                   Island island = new Island();
                   island.setIslandName(line);
                   islands.add(island);

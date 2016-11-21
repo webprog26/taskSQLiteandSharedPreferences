@@ -6,5 +6,9 @@ package com.example.webprog26.datatask.interfaces;
 
 public interface IsUserLoggedInListener {
 
-    void setIsLoggedIn(boolean isLoggedIn);
+    /**
+     * Changes user login state
+     * @param isLoggedIn boolean
+     */
+    void isUserLoggedIn(boolean isLoggedIn);
 }

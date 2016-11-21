@@ -11,12 +11,13 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.webprog26.datatask.R;
 import com.example.webprog26.datatask.adapters.IslandsAdapter;
 import com.example.webprog26.datatask.interfaces.OnIslandsUploadedListener;
 import com.example.webprog26.datatask.interfaces.OnUserSuccessfullyRegisterListener;
-import com.example.webprog26.datatask.interfaces.Reader;
+import com.example.webprog26.datatask.interfaces.OnIslandsFromAssetsReadListener;
 import com.example.webprog26.datatask.models.Island;
 import com.example.webprog26.datatask.models.User;
 import com.example.webprog26.datatask.providers.DBProvider;
@@ -24,17 +25,17 @@ import com.example.webprog26.datatask.threads.AssetsReaderThread;
 import com.example.webprog26.datatask.threads.IslandsAdditionalThread;
 import com.example.webprog26.datatask.threads.UserIdWriterThread;
 import com.example.webprog26.datatask.threads.UserRegisterThread;
-import com.example.webprog26.datatask.utils.CheckedChangeHandler;
-import com.example.webprog26.datatask.utils.FieldsTextChecker;
-import com.example.webprog26.datatask.utils.SharedPreferencesUtils;
+import com.example.webprog26.datatask.managers.CheckedChangeHandler;
+import com.example.webprog26.datatask.managers.FieldsTextChecker;
+import com.example.webprog26.datatask.managers.SharedPreferencesManager;
 
 import java.util.ArrayList;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener,
-        Reader, AdapterView.OnItemSelectedListener, OnIslandsUploadedListener, OnUserSuccessfullyRegisterListener {
+        OnIslandsFromAssetsReadListener, AdapterView.OnItemSelectedListener, OnIslandsUploadedListener, OnUserSuccessfullyRegisterListener {
 
-    private static final String TAG = "RegisterActivity";
-    public static final String COOK_ISLANDS_NAMES_FILE = "cook_islands.txt";
+    private static final String TAG = "RegisterActivity_TAG";
+    private static final String COOK_ISLANDS_NAMES_FILE = "cook_islands.txt";
 
     public static final long NO_ISLAND_SELECTED = 0;
 
@@ -42,7 +43,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private Spinner mIslandsSpinner;
     private CheckBox mChbSelectIsland;
     private DBProvider mDbProvider;
-    private SharedPreferencesUtils mSharedPreferencesUtils;
+    private SharedPreferencesManager mSharedPreferencesManager;
     private ArrayList<Island> mIslands;
     private long mUserIslandId = NO_ISLAND_SELECTED;
 
@@ -51,7 +52,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        mSharedPreferencesUtils = new SharedPreferencesUtils(PreferenceManager.getDefaultSharedPreferences(this));
+        mSharedPreferencesManager = new SharedPreferencesManager(PreferenceManager.getDefaultSharedPreferences(this));
 
         mDbProvider = new DBProvider(this);
         if(!mDbProvider.isTableIslandsAlreadyFilled()){
@@ -64,6 +65,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         mEtRegisterPswd  = (EditText) findViewById(R.id.etRegisterPswd);
 
         mChbSelectIsland = (CheckBox) findViewById(R.id.chbEnableIslandsSpinner);
+
+        if(!mChbSelectIsland.isChecked()){
+            Toast.makeText(this, getResources().getString(R.string.islands_selecting_disabled), Toast.LENGTH_LONG).show();
+        }
 
         mIslandsSpinner = (Spinner) findViewById(R.id.spinnerIslands);
         mIslandsSpinner.setEnabled(mChbSelectIsland.isChecked());
@@ -99,7 +104,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
-    public void onRead(ArrayList<Island> islands) {
+    public void onIslandsFromAssetsReadFinished(ArrayList<Island> islands) {
         new IslandsAdditionalThread(mDbProvider, islands, this).start();
     }
 
@@ -143,6 +148,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onUserSuccessfullyRegister(long userId) {
-        new UserIdWriterThread(userId, mSharedPreferencesUtils).start();
+        new UserIdWriterThread(userId, mSharedPreferencesManager).start();
     }
 }

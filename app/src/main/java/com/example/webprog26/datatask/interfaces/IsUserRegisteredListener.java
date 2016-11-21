@@ -6,5 +6,9 @@ package com.example.webprog26.datatask.interfaces;
 
 public interface IsUserRegisteredListener {
 
+    /**
+     * Checks user registration state
+     * @param isRegistered boolean
+     */
     void isUserRegistered(boolean isRegistered);
 }

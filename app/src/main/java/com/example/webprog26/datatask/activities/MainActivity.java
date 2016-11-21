@@ -2,6 +2,7 @@ package com.example.webprog26.datatask.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,22 +16,27 @@ import com.example.webprog26.datatask.interfaces.IsUserRegisteredListener;
 import com.example.webprog26.datatask.interfaces.OnUserIdReadListener;
 import com.example.webprog26.datatask.models.User;
 import com.example.webprog26.datatask.providers.DBProvider;
+import com.example.webprog26.datatask.threads.AssetsReaderThread;
 import com.example.webprog26.datatask.threads.LogInReaderThread;
 import com.example.webprog26.datatask.threads.LogInWriterThread;
 import com.example.webprog26.datatask.threads.RegisteredCheckerThread;
 import com.example.webprog26.datatask.threads.UserIdReaderThread;
 import com.example.webprog26.datatask.threads.UserIdWriterThread;
-import com.example.webprog26.datatask.utils.FieldsTextChecker;
-import com.example.webprog26.datatask.utils.LoginChecker;
-import com.example.webprog26.datatask.utils.SharedPreferencesUtils;
+import com.example.webprog26.datatask.managers.FieldsTextChecker;
+import com.example.webprog26.datatask.managers.LoginChecker;
+import com.example.webprog26.datatask.managers.SharedPreferencesManager;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         IsUserLoggedInListener, IsUserRegisteredListener, OnUserIdReadListener {
 
     private static final String TAG = "MainActivity_TAG";
+
+    private static final String COOK_ISLANDS_NAMES_FILE = "cook_islands.txt";
+
     private EditText mEtLoginName, mEtLoginPswd;
-    private SharedPreferencesUtils mSharedPreferencesUtils;
+    private SharedPreferencesManager mSharedPreferencesManager;
     private LoginChecker mLoginChecker;
+    private DBProvider mDbProvider;
 
 
     @Override
@@ -39,12 +45,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         SharedPreferences mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        mSharedPreferencesUtils = new SharedPreferencesUtils(mSharedPreferences);
+        mSharedPreferencesManager = new SharedPreferencesManager(mSharedPreferences);
 
-        new LogInReaderThread(mSharedPreferencesUtils, this).start();
+        mDbProvider = new DBProvider(this);
 
-        DBProvider mDbProvider = new DBProvider(this);
+//        if(!mDbProvider.isTableIslandsAlreadyFilled()){
+//            new AssetsReaderThread(this, COOK_ISLANDS_NAMES_FILE, this).start();
+//        }
+
         mLoginChecker = new LoginChecker(mDbProvider);
+
+        //Checking user login state. Redirecting user to LoggedInActivity if already logged in
+        new LogInReaderThread(mSharedPreferencesManager, this).start();
 
         mEtLoginName  = (EditText) findViewById(R.id.etLoginName);
         mEtLoginPswd  = (EditText) findViewById(R.id.etLoginPswd);
@@ -61,21 +73,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btnLogLogin:
+                //EditText fields shouldn't be empty
                 if(!FieldsTextChecker.fiedlsArentEmpty(mEtLoginName, mEtLoginPswd)) return;
+                //Forming new User with inputted data
                 User user = new User();
                 user.setUserName(mEtLoginName.getText().toString());
                 user.setUserPswd(mEtLoginPswd.getText().toString());
+                //Checking data base for user with inputted name adn password.
+                //If found, redirecting him to LoggedInActivity
                 new RegisteredCheckerThread(this, mLoginChecker, user).start();
                 break;
             case R.id.btnLogRegister:
+                //Starting RegisterActivity to register new User
                 startActivity(new Intent(MainActivity.this, RegisterActivity.class));
                 break;
         }
     }
 
     @Override
-    public void setIsLoggedIn(boolean isLoggedIn) {
+    public void isUserLoggedIn(boolean isLoggedIn) {
        if(isLoggedIn){
+           //User is already logged in. Redirecting him to LoggedInActivity immediately
            startActivity(new Intent(MainActivity.this, LoggedInActivity.class));
            finish();
        }
@@ -83,16 +101,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void isUserRegistered(boolean isRegistered) {
-            DBProvider dbProvider = new DBProvider(MainActivity.this);
+//            DBProvider dbProvider = new DBProvider(MainActivity.this);
 
-            new LogInWriterThread(mSharedPreferencesUtils, isRegistered).start();
-            new UserIdReaderThread(dbProvider, mEtLoginName.getText().toString(), this).start();
+            new LogInWriterThread(mSharedPreferencesManager, isRegistered).start();
+            new UserIdReaderThread(mDbProvider, mEtLoginName.getText().toString(), this).start();
             startActivity(new Intent(MainActivity.this, LoggedInActivity.class));
             finish();
     }
 
     @Override
     public void onUserIdFound(long userId) {
-        new UserIdWriterThread(userId, mSharedPreferencesUtils).start();
+        new UserIdWriterThread(userId, mSharedPreferencesManager).start();
     }
 }

@@ -5,5 +5,9 @@ package com.example.webprog26.datatask.interfaces;
  */
 
 public interface OnUserSuccessfullyRegisterListener {
+   /**
+    * Processes with user successfully registered
+    * @param userId long
+     */
    void onUserSuccessfullyRegister(long userId);
 }

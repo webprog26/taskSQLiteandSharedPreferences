@@ -5,5 +5,9 @@ package com.example.webprog26.datatask.interfaces;
  */
 
 public interface OnUserIdReadListener {
+    /**
+     * Processes with user found by given id
+     * @param userId long
+     */
     void onUserIdFound(long userId);
 }

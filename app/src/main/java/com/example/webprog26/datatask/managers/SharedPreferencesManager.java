@@ -1,4 +1,4 @@
-package com.example.webprog26.datatask.utils;
+package com.example.webprog26.datatask.managers;
 
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -7,17 +7,17 @@ import android.util.Log;
  * Created by webprog26 on 16.11.2016.
  */
 
-public class SharedPreferencesUtils {
+public class SharedPreferencesManager {
 
     private SharedPreferences mSharedPreferences;
 
-    private static final String TAG = "SharedPreferencesUtils";
+    private static final String TAG = "SharedPreferencesMan";
 
     private static final String USER_LOGIN_STATE = "user_login_state";
     private static final String USER_ID = "user_id";
     public static final int USER_SEARCH_ERROR = 0;
 
-    public SharedPreferencesUtils(SharedPreferences sharedPreferences) {
+    public SharedPreferencesManager(SharedPreferences sharedPreferences) {
         this.mSharedPreferences = sharedPreferences;
     }
 
