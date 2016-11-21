@@ -2,7 +2,6 @@ package com.example.webprog26.datatask.threads;
 
 import com.example.webprog26.datatask.providers.DBProvider;
 import com.example.webprog26.datatask.interfaces.InterruptChecker;
-import com.example.webprog26.datatask.interfaces.OnIslandsUploadedListener;
 import com.example.webprog26.datatask.models.Island;
 
 import java.util.ArrayList;
@@ -18,12 +17,10 @@ public class IslandsAdditionalThread extends Thread implements InterruptChecker 
 
     private DBProvider mDbProvider;
     private ArrayList<Island> mIslands;
-    private OnIslandsUploadedListener mIslandsUploadedListener;
 
-    public IslandsAdditionalThread(DBProvider mDbProvider, ArrayList<Island> mIslands, OnIslandsUploadedListener onIslandsUploadedListener) {
+    public IslandsAdditionalThread(DBProvider mDbProvider, ArrayList<Island> mIslands) {
         this.mDbProvider = mDbProvider;
         this.mIslands = mIslands;
-        this.mIslandsUploadedListener = onIslandsUploadedListener;
     }
 
     @Override
@@ -45,7 +42,6 @@ public class IslandsAdditionalThread extends Thread implements InterruptChecker 
                 break;
             }
         }
-        mIslandsUploadedListener.onIslandsUploaded();
     }
 
     @Override

@@ -13,10 +13,13 @@ import android.widget.EditText;
 import com.example.webprog26.datatask.R;
 import com.example.webprog26.datatask.interfaces.IsUserLoggedInListener;
 import com.example.webprog26.datatask.interfaces.IsUserRegisteredListener;
+import com.example.webprog26.datatask.interfaces.OnIslandsFromAssetsReadListener;
 import com.example.webprog26.datatask.interfaces.OnUserIdReadListener;
+import com.example.webprog26.datatask.models.Island;
 import com.example.webprog26.datatask.models.User;
 import com.example.webprog26.datatask.providers.DBProvider;
 import com.example.webprog26.datatask.threads.AssetsReaderThread;
+import com.example.webprog26.datatask.threads.IslandsAdditionalThread;
 import com.example.webprog26.datatask.threads.LogInReaderThread;
 import com.example.webprog26.datatask.threads.LogInWriterThread;
 import com.example.webprog26.datatask.threads.RegisteredCheckerThread;
@@ -26,8 +29,10 @@ import com.example.webprog26.datatask.managers.FieldsTextChecker;
 import com.example.webprog26.datatask.managers.LoginChecker;
 import com.example.webprog26.datatask.managers.SharedPreferencesManager;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
-        IsUserLoggedInListener, IsUserRegisteredListener, OnUserIdReadListener {
+        IsUserLoggedInListener, IsUserRegisteredListener, OnUserIdReadListener, OnIslandsFromAssetsReadListener {
 
     private static final String TAG = "MainActivity_TAG";
 
@@ -49,9 +54,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mDbProvider = new DBProvider(this);
 
-//        if(!mDbProvider.isTableIslandsAlreadyFilled()){
-//            new AssetsReaderThread(this, COOK_ISLANDS_NAMES_FILE, this).start();
-//        }
+        if(!mDbProvider.isTableIslandsAlreadyFilled()){
+            new AssetsReaderThread(this, COOK_ISLANDS_NAMES_FILE, this).start();
+        }
 
         mLoginChecker = new LoginChecker(mDbProvider);
 
@@ -112,5 +117,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onUserIdFound(long userId) {
         new UserIdWriterThread(userId, mSharedPreferencesManager).start();
+    }
+
+    /**
+     * Processes {@link ArrayList < Island >} to GUI
+     *
+     * @param islands {@link ArrayList}
+     */
+    @Override
+    public void onIslandsFromAssetsReadFinished(ArrayList<Island> islands) {
+        new IslandsAdditionalThread(mDbProvider, islands).start();
     }
 }
