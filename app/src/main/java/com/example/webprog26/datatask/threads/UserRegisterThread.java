@@ -35,7 +35,11 @@ public class UserRegisterThread extends Thread implements InterruptChecker {
         }
     }
 
-    private synchronized void addUserToDB(User user){
+    /**
+     * Provides adding user to data base
+     * @param user {@link User}
+     */
+    private void addUserToDB(User user){
         mSuccessfullyRegisterListener.onUserSuccessfullyRegister(mDbProvider.registerUserWithIsland(user));
     }
 

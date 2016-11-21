@@ -19,7 +19,6 @@ import com.example.webprog26.datatask.interfaces.OnUserSuccessfullyRegisterListe
 import com.example.webprog26.datatask.models.Island;
 import com.example.webprog26.datatask.models.User;
 import com.example.webprog26.datatask.providers.DBProvider;
-import com.example.webprog26.datatask.threads.UserIdWriterThread;
 import com.example.webprog26.datatask.threads.UserRegisterThread;
 import com.example.webprog26.datatask.managers.CheckedChangeHandler;
 import com.example.webprog26.datatask.managers.FieldsTextChecker;
@@ -50,6 +49,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         mSharedPreferencesManager = new SharedPreferencesManager(PreferenceManager.getDefaultSharedPreferences(this));
 
         mDbProvider = new DBProvider(this);
+
+        //Load Islands List from database if this list exists
         if(mDbProvider.isTableIslandsAlreadyFilled()){
             new IslandsAsyncLoader().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
         }
@@ -59,6 +60,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         mChbSelectIsland = (CheckBox) findViewById(R.id.chbEnableIslandsSpinner);
 
+        //Warning about disabled by default island selection
         if(!mChbSelectIsland.isChecked()){
             Toast.makeText(this, getResources().getString(R.string.islands_selecting_disabled), Toast.LENGTH_LONG).show();
         }
@@ -82,13 +84,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btnRegRegister:
-                if(!FieldsTextChecker.fiedlsArentEmpty(mEtRegisterName, mEtRegisterPswd)) return;
+                if(!FieldsTextChecker.fieldsArentEmpty(mEtRegisterName, mEtRegisterPswd)) return;
                 User user = new User();
                 user.setUserName(mEtRegisterName.getText().toString());
                 user.setUserPswd(mEtRegisterPswd.getText().toString());
                 if(mChbSelectIsland.isChecked()){
                     user.setUserIslandId(mUserIslandId);
                 } else {
+                    //Since Island selection disabled, no island id will be written to database
                     user.setUserIslandId(NO_ISLAND_SELECTED);
                 }
                 new UserRegisterThread(user, mDbProvider, this).start();
@@ -133,6 +136,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onUserSuccessfullyRegister(long userId) {
-        new UserIdWriterThread(userId, mSharedPreferencesManager).start();
+        //User successfully registered. Writing his id to SharedPreferences
+        mSharedPreferencesManager.writeUserId(userId);
     }
 }

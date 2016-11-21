@@ -36,6 +36,10 @@ public class RegisteredCheckerThread extends Thread implements InterruptChecker 
         Log.i(TAG, Thread.currentThread().getName() + " isInterrupted() " + isInterrupted());
     }
 
+    /**
+     * Provides checking is user already registered
+     * @param user {@link User}
+     */
     private synchronized void checkUserForRegistration(User user){
         Log.i(TAG, "checkUserForRegistration " + user.getUserName() + ", with password " + user.getUserPswd());
         mIsUserRegistered.isUserRegistered(mLoginChecker.isUserRegisteredAlready(user.getUserName(), user.getUserPswd()));

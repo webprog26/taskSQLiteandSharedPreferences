@@ -13,8 +13,6 @@ import com.example.webprog26.datatask.R;
 import com.example.webprog26.datatask.managers.SharedPreferencesManager;
 import com.example.webprog26.datatask.models.User;
 import com.example.webprog26.datatask.providers.DBProvider;
-import com.example.webprog26.datatask.threads.LogInWriterThread;
-import com.example.webprog26.datatask.threads.UserIdWriterThread;
 
 public class LoggedInActivity extends AppCompatActivity {
 
@@ -28,6 +26,7 @@ public class LoggedInActivity extends AppCompatActivity {
         mSharedPreferencesManager = new SharedPreferencesManager(PreferenceManager.getDefaultSharedPreferences(this));
         mTvUserInfo = (TextView) findViewById(R.id.tvUserInfo);
 
+        //Loading Islands List to Spinner, setting up SpinnerAdapter
         new UserInfoAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
 
@@ -35,9 +34,9 @@ public class LoggedInActivity extends AppCompatActivity {
         btnLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new LogInWriterThread(mSharedPreferencesManager, false).start();
-                new UserIdWriterThread(SharedPreferencesManager.USER_SEARCH_ERROR, mSharedPreferencesManager).start();
-                startActivity(new Intent(LoggedInActivity.this, MainActivity.class));
+                mSharedPreferencesManager.writeLoginState(false);//Since user is logging out, his login state is false. Writing it to SharedPreferences
+                mSharedPreferencesManager.writeUserId(SharedPreferencesManager.USER_SEARCH_ERROR);//Since user is logging out, his id becomes 0
+                startActivity(new Intent(LoggedInActivity.this, MainActivity.class));// returning to the MainActivity, so any user can login or register
                 finish();
             }
         });

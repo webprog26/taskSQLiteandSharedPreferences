@@ -2,7 +2,6 @@ package com.example.webprog26.datatask.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,10 +20,8 @@ import com.example.webprog26.datatask.providers.DBProvider;
 import com.example.webprog26.datatask.threads.AssetsReaderThread;
 import com.example.webprog26.datatask.threads.IslandsAdditionalThread;
 import com.example.webprog26.datatask.threads.LogInReaderThread;
-import com.example.webprog26.datatask.threads.LogInWriterThread;
 import com.example.webprog26.datatask.threads.RegisteredCheckerThread;
 import com.example.webprog26.datatask.threads.UserIdReaderThread;
-import com.example.webprog26.datatask.threads.UserIdWriterThread;
 import com.example.webprog26.datatask.managers.FieldsTextChecker;
 import com.example.webprog26.datatask.managers.LoginChecker;
 import com.example.webprog26.datatask.managers.SharedPreferencesManager;
@@ -79,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()){
             case R.id.btnLogLogin:
                 //EditText fields shouldn't be empty
-                if(!FieldsTextChecker.fiedlsArentEmpty(mEtLoginName, mEtLoginPswd)) return;
+                if(!FieldsTextChecker.fieldsArentEmpty(mEtLoginName, mEtLoginPswd)) return;
                 //Forming new User with inputted data
                 User user = new User();
                 user.setUserName(mEtLoginName.getText().toString());
@@ -106,17 +103,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void isUserRegistered(boolean isRegistered) {
-//            DBProvider dbProvider = new DBProvider(MainActivity.this);
-
-            new LogInWriterThread(mSharedPreferencesManager, isRegistered).start();
-            new UserIdReaderThread(mDbProvider, mEtLoginName.getText().toString(), this).start();
-            startActivity(new Intent(MainActivity.this, LoggedInActivity.class));
+            mSharedPreferencesManager.writeLoginState(isRegistered);//User found. Saving login state while session continues
+            new UserIdReaderThread(mDbProvider, mEtLoginName.getText().toString(), this).start();//getting current user id from data base
+            startActivity(new Intent(MainActivity.this, LoggedInActivity.class)); //starting LoggedInActivity
             finish();
     }
 
     @Override
     public void onUserIdFound(long userId) {
-        new UserIdWriterThread(userId, mSharedPreferencesManager).start();
+        mSharedPreferencesManager.writeUserId(userId);//Writing current user id to SharedPreferences
     }
 
     /**
@@ -126,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     @Override
     public void onIslandsFromAssetsReadFinished(ArrayList<Island> islands) {
+        //Islands list has been successfully read. Adding it to the data base
         new IslandsAdditionalThread(mDbProvider, islands).start();
     }
 }

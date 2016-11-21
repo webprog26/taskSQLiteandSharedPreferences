@@ -18,6 +18,12 @@ public class LoginChecker {
         this.mDbProvider = mDbProvider;
     }
 
+    /**
+     * Checks is user data already exists in the database
+     * @param userName {@link String}
+     * @param userPswd {@link String}
+     * @return boolean
+     */
     public boolean isUserRegisteredAlready(String userName, String userPswd){
         for(User user: mDbProvider.getUsersFromDB()){
             if(user.getUserName().equals(userName) && userPswd.equals(user.getUserPswd())){

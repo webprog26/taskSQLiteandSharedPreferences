@@ -36,7 +36,7 @@ public class IslandsAdditionalThread extends Thread implements InterruptChecker 
      * Adds islands to data base
      * @param islands {@link ArrayList<Island>}
      */
-    private synchronized void addIslandsToDB(ArrayList<Island> islands){
+    private void addIslandsToDB(ArrayList<Island> islands){
         for(Island island: islands){
             if(mDbProvider.insertIslandToDb(island) == TABLE_ISLANDS_FILLED_MARKER){
                 break;

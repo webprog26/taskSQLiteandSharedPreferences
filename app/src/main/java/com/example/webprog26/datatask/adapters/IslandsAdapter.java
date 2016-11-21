@@ -44,6 +44,4 @@ public class IslandsAdapter extends ArrayAdapter<Island>{
     public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
         return getView(position, convertView, parent);
     }
-
-
 }

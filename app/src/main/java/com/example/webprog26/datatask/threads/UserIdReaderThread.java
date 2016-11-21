@@ -29,7 +29,11 @@ public class UserIdReaderThread extends Thread implements InterruptChecker {
         }
     }
 
-    private synchronized void getUserByName(String userName){
+    /**
+     * Provides data base search for {@link com.example.webprog26.datatask.models.User} with given userName
+     * @param userName {@link String}
+     */
+    private void getUserByName(String userName){
         mUserIdReadListener.onUserIdFound(mDbProvider.getUserByName(userName).getUserId());
     }
 

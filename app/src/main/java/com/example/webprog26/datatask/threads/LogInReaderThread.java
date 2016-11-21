@@ -28,6 +28,9 @@ public class LogInReaderThread extends Thread implements InterruptChecker {
 
     }
 
+    /**
+     * Provides reading user login state from {@link android.content.SharedPreferences}
+     */
     private synchronized void setIsUserLoggedIn(){
         mIsUserLoggedIn.isUserLoggedIn(mSharedPreferencesManager.readUserLoginState());
     }

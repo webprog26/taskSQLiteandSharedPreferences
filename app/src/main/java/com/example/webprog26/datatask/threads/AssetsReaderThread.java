@@ -57,7 +57,7 @@ public class AssetsReaderThread extends Thread implements InterruptChecker {
      * @param fileName {@link String}
      * @return {@link ArrayList<{Island>}
      */
-    private synchronized ArrayList<Island> getTxtFile(String fileName)
+    private ArrayList<Island> getTxtFile(String fileName)
     {
         BufferedReader reader = null;
         InputStream inputStream = null;
