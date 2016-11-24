@@ -34,7 +34,7 @@ public class SharedPreferencesManager {
      * Reads user login state from {@link SharedPreferences}
      * @return boolean
      */
-    public boolean readUserLoginState(){
+    public boolean isUserLoggedIn(){
         return mSharedPreferences.getBoolean(USER_LOGIN_STATE, false);
     }
 

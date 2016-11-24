@@ -25,13 +25,11 @@ public class LoginChecker {
      * @return boolean
      */
     public boolean isUserRegisteredAlready(String userName, String userPswd){
-        for(User user: mDbProvider.getUsersFromDB()){
-            if(user.getUserName().equals(userName) && userPswd.equals(user.getUserPswd())){
-                Log.i(TAG, "Found user " + user.getUserName() + ", with password" + user.getUserPswd());
-                return true;
-            }
+        User user = mDbProvider.getUserByName(userName);
+        if(user.getUserName() == null || user.getUserPswd() == null){
+            return false;
         }
-        Log.i(TAG, "User not found" + userName + ", with password" + userPswd);
-        return false;
+
+        return user.getUserName().equals(userName) && user.getUserPswd().equals(userPswd);
     }
 }

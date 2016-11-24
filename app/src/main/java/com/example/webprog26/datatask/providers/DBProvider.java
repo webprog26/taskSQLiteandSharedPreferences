@@ -115,6 +115,7 @@ public class DBProvider {
         while (cursor.moveToNext()){
             user.setUserId(cursor.getLong(cursor.getColumnIndex(DBHelper.USER_ID)));
             user.setUserName(userName);
+            user.setUserPswd(cursor.getString(cursor.getColumnIndex(DBHelper.USER_PSWD)));
             user.setUserIslandId(cursor.getLong(cursor.getColumnIndex(DBHelper.USERS_COOK_ISLAND_ID)));
         }
         cursor.close();
