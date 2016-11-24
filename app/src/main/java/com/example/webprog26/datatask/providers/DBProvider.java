@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.example.webprog26.datatask.activities.RegisterActivity;
 import com.example.webprog26.datatask.db.DBHelper;
+import com.example.webprog26.datatask.managers.CursorManager;
 import com.example.webprog26.datatask.models.Island;
 import com.example.webprog26.datatask.models.User;
 
@@ -68,12 +69,7 @@ public class DBProvider {
         Cursor cursor = mDbHelper.getReadableDatabase().query(DBHelper.TABLE_USERS, null, null, null, null, null, DBHelper.USER_ID);
 
         while (cursor.moveToNext()){
-            User user = new User();
-            user.setUserId(cursor.getLong(cursor.getColumnIndex(DBHelper.USER_ID)));
-            user.setUserName(cursor.getString(cursor.getColumnIndex(DBHelper.USER_NAME)));
-            user.setUserPswd(cursor.getString(cursor.getColumnIndex(DBHelper.USER_PSWD)));
-            user.setUserIslandId(cursor.getLong(cursor.getColumnIndex(DBHelper.USERS_COOK_ISLAND_ID)));
-            users.add(user);
+            users.add(CursorManager.getUserFromDatabase(cursor));
         }
         cursor.close();
         return users;
@@ -90,11 +86,8 @@ public class DBProvider {
         String selection = DBHelper.USER_ID + " = ?";
         String[] selectionArgs = new String[]{String.valueOf(userId)};
         Cursor cursor = mDbHelper.getReadableDatabase().query(DBHelper.TABLE_USERS, null, selection, selectionArgs, null, null, null);
-
         while (cursor.moveToNext()){
-            user.setUserId(userId);
-            user.setUserName(cursor.getString(cursor.getColumnIndex(DBHelper.USER_NAME)));
-            user.setUserIslandId(cursor.getLong(cursor.getColumnIndex(DBHelper.USERS_COOK_ISLAND_ID)));
+            user = CursorManager.getUserFromDatabase(cursor);
         }
         cursor.close();
         return user;
@@ -111,12 +104,8 @@ public class DBProvider {
         String selection = DBHelper.USER_NAME + " = ?";
         String[] selectionArgs = new String[]{userName};
         Cursor cursor = mDbHelper.getReadableDatabase().query(DBHelper.TABLE_USERS, null, selection, selectionArgs, null, null, null);
-
         while (cursor.moveToNext()){
-            user.setUserId(cursor.getLong(cursor.getColumnIndex(DBHelper.USER_ID)));
-            user.setUserName(userName);
-            user.setUserPswd(cursor.getString(cursor.getColumnIndex(DBHelper.USER_PSWD)));
-            user.setUserIslandId(cursor.getLong(cursor.getColumnIndex(DBHelper.USERS_COOK_ISLAND_ID)));
+            user = CursorManager.getUserFromDatabase(cursor);
         }
         cursor.close();
         return user;
