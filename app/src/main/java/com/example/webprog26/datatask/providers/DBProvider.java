@@ -50,10 +50,7 @@ public class DBProvider {
         Cursor cursor = mDbHelper.getReadableDatabase().query(DBHelper.TABLE_COOK_ISLANDS, null, null, null, null, null, DBHelper.COOK_ISLAND_ID);
 
         while (cursor.moveToNext()){
-            Island island = new Island();
-                   island.setIslandId(cursor.getLong(cursor.getColumnIndex(DBHelper.COOK_ISLAND_ID)));
-                   island.setIslandName(cursor.getString(cursor.getColumnIndex(DBHelper.COOK_ISLAND_NAME)));
-            islands.add(island);
+            islands.add(CursorManager.getIslandFromDatabase(cursor));
         }
         cursor.close();
         return islands;

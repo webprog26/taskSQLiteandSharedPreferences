@@ -3,6 +3,7 @@ package com.example.webprog26.datatask.managers;
 import android.database.Cursor;
 
 import com.example.webprog26.datatask.db.DBHelper;
+import com.example.webprog26.datatask.models.Island;
 import com.example.webprog26.datatask.models.User;
 
 /**
@@ -26,5 +27,15 @@ public class CursorManager {
         user.setUserIslandId(cursor.getLong(cursor.getColumnIndex(DBHelper.USERS_COOK_ISLAND_ID)));
 
         return user;
+    }
+
+    public static Island getIslandFromDatabase(Cursor cursor){
+        if(cursor == null) return null;
+        Island island = new Island();
+
+        island.setIslandId(cursor.getLong(cursor.getColumnIndex(DBHelper.COOK_ISLAND_ID)));
+        island.setIslandName(cursor.getString(cursor.getColumnIndex(DBHelper.COOK_ISLAND_NAME)));
+
+        return island;
     }
 }
