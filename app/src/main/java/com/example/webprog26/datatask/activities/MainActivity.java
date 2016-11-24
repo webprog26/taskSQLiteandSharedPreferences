@@ -2,12 +2,15 @@ package com.example.webprog26.datatask.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.webprog26.datatask.R;
 import com.example.webprog26.datatask.interfaces.IsUserLoggedInListener;
@@ -103,10 +106,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void isUserRegistered(boolean isRegistered) {
-            mSharedPreferencesManager.writeLoginState(isRegistered);//User found. Saving login state while session continues
-            new UserIdReaderThread(mDbProvider, mEtLoginName.getText().toString(), this).start();//getting current user id from data base
-            startActivity(new Intent(MainActivity.this, LoggedInActivity.class)); //starting LoggedInActivity
-            finish();
+            if(isRegistered){
+                mSharedPreferencesManager.writeLoginState(isRegistered);//User found. Saving login state while session continues
+                new UserIdReaderThread(mDbProvider, mEtLoginName.getText().toString(), this).start();//getting current user id from data base
+                startActivity(new Intent(MainActivity.this, LoggedInActivity.class)); //starting LoggedInActivity
+                finish();
+            } else {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(MainActivity.this, getResources().getString(R.string.unregistered_user_login), Toast.LENGTH_SHORT).show();
+                    }
+                });
+                return;
+            }
     }
 
     @Override

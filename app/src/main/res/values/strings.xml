@@ -12,4 +12,5 @@
     <string name="island_id">Your island id is %1$d.</string>
     <string name="no_island">You have no island</string>
     <string name="islands_selecting_disabled">Island selecting disabled</string>
+    <string name="unregistered_user_login">Unregistered user login attempt!</string>
 </resources>
